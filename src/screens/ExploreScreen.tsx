@@ -7,7 +7,14 @@ import { COLORS } from '../utils/constants';
 
 export const ExploreScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const { stocks, isLoading, isLoadingMore = false, error, loadMore } = useStocks(searchQuery);
+  const { 
+    stocks, 
+    isLoading, 
+    isLoadingMore = false, 
+    error, 
+    loadMore,
+    isRateLimited 
+  } = useStocks(searchQuery);
 
   return (
     <LinearGradient
@@ -30,6 +37,7 @@ export const ExploreScreen: React.FC = () => {
           isLoadingMore={isLoadingMore}
           onLoadMore={loadMore}
           error={error}
+          isRateLimited={isRateLimited}
         />
       </SafeAreaView>
     </LinearGradient>

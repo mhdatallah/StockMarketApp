@@ -3,6 +3,7 @@ import { FlatList, ActivityIndicator, View, Text, StyleSheet, Dimensions } from 
 import { Stock } from '../types/stock';
 import { StockItem } from './StockItem';
 import { COLORS } from '../utils/constants';
+import { RateLimitError } from '../api/stocks';
 
 interface StockListProps {
   stocks: Stock[];
@@ -10,6 +11,7 @@ interface StockListProps {
   isLoadingMore: boolean;
   onLoadMore: () => void;
   error?: Error;
+  isRateLimited?: boolean;
 }
 
 const { width } = Dimensions.get('window');
@@ -22,11 +24,16 @@ export const StockList: React.FC<StockListProps> = ({
   isLoadingMore,
   onLoadMore,
   error,
+  isRateLimited,
 }) => {
   if (error) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>Error loading stocks</Text>
+        <Text style={styles.errorText}>
+          {isRateLimited 
+            ? 'Rate limit exceeded. Please wait a moment before trying again.'
+            : 'Error loading stocks'}
+        </Text>
       </View>
     );
   }
@@ -70,10 +77,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   errorText: {
     color: COLORS.error,
     fontSize: 16,
+    textAlign: 'center',
   },
   footer: {
     padding: 16,

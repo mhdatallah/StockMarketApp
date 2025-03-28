@@ -2,19 +2,30 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { StockList } from '../../src/components/StockList';
 import { Stock } from '../../src/types/stock';
+import { RateLimitError } from '../../src/api/stocks';
 
 const mockStocks: Stock[] = [
   {
     ticker: 'AAPL',
     name: 'Apple Inc.',
-    change: 2.5,
-    change_percent: 1.67,
+    market: 'stocks',
+    locale: 'us',
+    primary_exchange: 'XNAS',
+    type: 'CS',
+    active: true,
+    currency_name: 'usd',
+    last_updated_utc: '2024-03-20T00:00:00Z',
   },
   {
     ticker: 'GOOGL',
     name: 'Alphabet Inc.',
-    change: -15.0,
-    change_percent: -0.53,
+    market: 'stocks',
+    locale: 'us',
+    primary_exchange: 'XNAS',
+    type: 'CS',
+    active: true,
+    currency_name: 'usd',
+    last_updated_utc: '2024-03-20T00:00:00Z',
   },
 ];
 
@@ -49,6 +60,21 @@ describe('StockList Component', () => {
       />
     );
     expect(getByText('Error loading stocks')).toBeTruthy();
+  });
+
+  it('renders rate limit error message when isRateLimited is true', () => {
+    const error = new RateLimitError('Rate limit exceeded');
+    const { getByText } = render(
+      <StockList
+        stocks={[]}
+        isLoading={false}
+        isLoadingMore={false}
+        onLoadMore={mockOnLoadMore}
+        error={error}
+        isRateLimited={true}
+      />
+    );
+    expect(getByText('Rate limit exceeded. Please wait a moment before trying again.')).toBeTruthy();
   });
 
   it('renders list of stocks correctly', () => {

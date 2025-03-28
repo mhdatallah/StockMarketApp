@@ -1,6 +1,13 @@
 import { StockResponse } from '../types/stock';
 import { API_KEY, BASE_URL, ITEMS_PER_PAGE } from '../utils/constants';
 
+export class RateLimitError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RateLimitError';
+  }
+}
+
 export const fetchStocks = async (
   search?: string,
   cursor?: string
@@ -12,8 +19,12 @@ export const fetchStocks = async (
   
   const response = await fetch(url);
   
+  if (response.status === 429) {
+    throw new RateLimitError('Rate limit exceeded. Please try again later.');
+  }
+  
   if (!response.ok) {
-    throw new Error('Failed to fetch stocks');
+    throw new Error(`Failed to fetch stocks: ${response.statusText}`);
   }
   
   return response.json();

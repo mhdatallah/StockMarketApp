@@ -1,5 +1,5 @@
 import useSWRInfinite from 'swr/infinite';
-import { fetchStocks } from '../api/stocks';
+import { fetchStocks, RateLimitError } from '../api/stocks';
 import { StockResponse } from '../types/stock';
 import { CACHE_TIME } from '../utils/constants';
 
@@ -22,12 +22,22 @@ export const useStocks = (search?: string) => {
     setSize,
     isLoading,
     isValidating,
+    mutate,
   } = useSWRInfinite<StockResponse>(
     getKey,
-    async ([_, cursor]) => {
+    async ([_, cursor]): Promise<StockResponse> => {
       try {
         return await fetchStocks(search, cursor);
       } catch (err) {
+        if (err instanceof RateLimitError) {
+          // If we hit a rate limit, wait for 5 seconds before retrying
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          const result = await mutate();
+          if (!result) {
+            throw new Error('Failed to retry after rate limit');
+          }
+          return result[0];
+        }
         throw err;
       }
     },
@@ -35,6 +45,7 @@ export const useStocks = (search?: string) => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       dedupingInterval: CACHE_TIME,
+      shouldRetryOnError: (err) => !(err instanceof RateLimitError),
     }
   );
 
@@ -52,5 +63,6 @@ export const useStocks = (search?: string) => {
     isLoadingMore,
     isValidating,
     loadMore,
+    isRateLimited: error instanceof RateLimitError,
   };
 }; 
