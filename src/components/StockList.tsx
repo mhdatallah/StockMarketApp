@@ -33,7 +33,7 @@ export const StockList: React.FC<StockListProps> = ({
 
   if (isLoading && stocks.length === 0) {
     return (
-      <View style={styles.centerContainer}>
+      <View style={styles.centerContainer} testID="loading-indicator">
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
@@ -41,6 +41,7 @@ export const StockList: React.FC<StockListProps> = ({
 
   return (
     <FlatList
+      testID="stock-list"
       data={stocks}
       renderItem={({ item }) => (
         <View style={[styles.itemContainer, { width: ITEM_WIDTH }]}>
@@ -55,7 +56,7 @@ export const StockList: React.FC<StockListProps> = ({
       columnWrapperStyle={styles.row}
       ListFooterComponent={
         isLoadingMore ? (
-          <View style={styles.footer}>
+          <View style={styles.footer} testID="loading-more-indicator">
             <ActivityIndicator size="small" color={COLORS.primary} />
           </View>
         ) : null

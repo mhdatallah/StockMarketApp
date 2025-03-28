@@ -24,7 +24,13 @@ export const useStocks = (search?: string) => {
     isValidating,
   } = useSWRInfinite<StockResponse>(
     getKey,
-    ([_, cursor]) => fetchStocks(search, cursor),
+    async ([_, cursor]) => {
+      try {
+        return await fetchStocks(search, cursor);
+      } catch (err) {
+        throw err;
+      }
+    },
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
