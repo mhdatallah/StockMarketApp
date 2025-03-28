@@ -5,12 +5,15 @@ export const ITEMS_PER_PAGE = 50;
 export const CACHE_TIME = 1000 * 60 * 5; // 5 minutes
 
 export const COLORS = {
-  primary: '#007AFF',
+  primary: '#90EE90', // Light green
+  secondary: '#FFFF99', // Light yellow
   background: '#FFFFFF',
-  text: '#000000',
+  text: '#333333',
   secondaryText: '#666666',
   border: '#E5E5E5',
   error: '#FF3B30',
   success: '#34C759',
   searchBackground: '#F5F5F5',
+  gradientStart: '#FFFF99', // Yellow
+  gradientEnd: '#90EE90', // Green
 }; 

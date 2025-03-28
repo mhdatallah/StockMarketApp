@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, View, TextInput } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { StockList } from '../components/StockList';
 import { useStocks } from '../hooks/useStocks';
 import { COLORS } from '../utils/constants';
@@ -9,41 +10,46 @@ export const ExploreScreen: React.FC = () => {
   const { stocks, isLoading, isLoadingMore = false, error, loadMore } = useStocks(searchQuery);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search stocks..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholderTextColor={COLORS.secondaryText}
+    <LinearGradient
+      colors={[COLORS.gradientStart, COLORS.gradientEnd]}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search stocks..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor={COLORS.secondaryText}
+          />
+        </View>
+        <StockList
+          stocks={stocks}
+          isLoading={isLoading}
+          isLoadingMore={isLoadingMore}
+          onLoadMore={loadMore}
+          error={error}
         />
-      </View>
-      <StockList
-        stocks={stocks}
-        isLoading={isLoading}
-        isLoadingMore={isLoadingMore}
-        onLoadMore={loadMore}
-        error={error}
-      />
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   searchContainer: {
     padding: 16,
-    backgroundColor: COLORS.background,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
   },
   searchInput: {
     height: 40,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: COLORS.background,
     borderRadius: 8,
     paddingHorizontal: 16,
     fontSize: 16,

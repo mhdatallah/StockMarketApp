@@ -32,15 +32,16 @@ const App = () => {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: COLORS.background,
+            backgroundColor: 'transparent',
           },
+          headerTransparent: true,
           headerTintColor: COLORS.text,
           headerTitle: '',
           headerShadowVisible: false,
-          headerRight: () => (
+          headerLeft: () => (
             <Image
               source={require('./src/assets/nasdaq-logo.svg')}
-              style={{ width: 100, height: 30, marginRight: 16 }}
+              style={{ width: 100, height: 30, marginLeft: 16 }}
               resizeMode="contain"
             />
           ),
